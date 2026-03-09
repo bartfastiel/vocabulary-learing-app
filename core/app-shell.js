@@ -35,7 +35,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #091830 0%, #050d1a 60%, #010608 100%); }
         }
 
-        /* Sterne-Partikel */
         #bg::before {
           content: "";
           position: absolute; inset: 0;
@@ -172,7 +171,6 @@ class AppShell extends HTMLElement {
         #avatar-mini { width: 100%; height: 100%; }
         #avatar-mini svg { width: 100%; height: 100%; display: block; }
 
-        /* ── Profilwechsler unter Avatar ── */
         #profile-switcher {
           position: absolute; top: 214px; left: 12px; z-index: 2;
           width: 200px; text-align: center; cursor: pointer;
@@ -185,7 +183,6 @@ class AppShell extends HTMLElement {
         }
         #profile-switcher:hover { background: rgba(3,60,110,0.85); color: #e0f2fe; }
 
-        /* ── Profilauswahl Overlay ── */
         #profile-overlay {
           position: fixed; inset: 0; z-index: 9998;
           background: rgba(0,5,15,0.96);
@@ -278,7 +275,6 @@ class AppShell extends HTMLElement {
         }
         #btn-profile-create:hover { filter: brightness(1.1); }
 
-        /* ── Rollenauswahl ── */
         #role-overlay {
           position: fixed; inset: 0; z-index: 9999;
           background: rgba(0,5,15,0.95);
@@ -324,7 +320,6 @@ class AppShell extends HTMLElement {
         .role-btn .role-sub { font-size: 0.75rem; color: #7dd3fc; font-weight: normal; }
 
         /* ── Background theme overrides ── */
-        /* ocean */
         #bg[data-theme="ocean"] { animation-name: bgShift-ocean; }
         #bg[data-theme="ocean"] .orb1 { background: #0e7490; }
         #bg[data-theme="ocean"] .orb2 { background: #06b6d4; }
@@ -337,7 +332,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #052535 0%, #021a22 60%, #010810 100%); }
         }
 
-        /* purple */
         #bg[data-theme="purple"] { animation-name: bgShift-purple; }
         #bg[data-theme="purple"] .orb1 { background: #7c3aed; }
         #bg[data-theme="purple"] .orb2 { background: #a855f7; }
@@ -350,7 +344,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #180630 0%, #0f0520 60%, #040108 100%); }
         }
 
-        /* forest */
         #bg[data-theme="forest"] { animation-name: bgShift-forest; }
         #bg[data-theme="forest"] .orb1 { background: #166534; }
         #bg[data-theme="forest"] .orb2 { background: #22c55e; }
@@ -363,7 +356,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #08220c 0%, #041505 60%, #010802 100%); }
         }
 
-        /* sunset */
         #bg[data-theme="sunset"] { animation-name: bgShift-sunset; }
         #bg[data-theme="sunset"] .orb1 { background: #c2410c; }
         #bg[data-theme="sunset"] .orb2 { background: #f97316; }
@@ -376,7 +368,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #250e06 0%, #1a0805 60%, #080201 100%); }
         }
 
-        /* rose */
         #bg[data-theme="rose"] { animation-name: bgShift-rose; }
         #bg[data-theme="rose"] .orb1 { background: #be185d; }
         #bg[data-theme="rose"] .orb2 { background: #ec4899; }
@@ -389,7 +380,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #250614 0%, #1a0510 60%, #080206 100%); }
         }
 
-        /* gold */
         #bg[data-theme="gold"] { animation-name: bgShift-gold; }
         #bg[data-theme="gold"] .orb1 { background: #b45309; }
         #bg[data-theme="gold"] .orb2 { background: #eab308; }
@@ -402,7 +392,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #221500 0%, #1a1000 60%, #080600 100%); }
         }
 
-        /* ice */
         #bg[data-theme="ice"] { animation-name: bgShift-ice; }
         #bg[data-theme="ice"] .orb1 { background: #60a5fa; }
         #bg[data-theme="ice"] .orb2 { background: #93c5fd; }
@@ -417,7 +406,6 @@ class AppShell extends HTMLElement {
 
       </style>
 
-      <!-- Profilauswahl -->
       <div id="profile-overlay" class="hidden">
         <div id="profile-box">
           <div id="profile-pick-view">
@@ -705,7 +693,6 @@ class AppShell extends HTMLElement {
             const start = performance.now();
             const tick = () => {
                 const result = fn();
-                console.log("waitFor tick:", result);
                 if (result) return resolve(result);
                 if (performance.now() - start > timeout) return resolve(null);
                 setTimeout(tick, interval);

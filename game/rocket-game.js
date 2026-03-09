@@ -192,7 +192,7 @@ class RocketGame extends HTMLElement {
 
         canvas.addEventListener("touchend", () => {
             touchX = null;
-            hasShotThisTouch = false; // wieder erlauben bei neuem Touch
+            hasShotThisTouch = false;
             e.preventDefault();
         }, {passive: true});
 

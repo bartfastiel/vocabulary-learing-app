@@ -1,19 +1,16 @@
 import "./points.js";
 
-// Question types
 import "./question/question-wordgerman.js";
 import "./question/question-wordenglish.js";
 import "./question/question-voiceenglish.js";
 import "./question/question-image.js";
 
-// Answer types
 import "./answer/answer-choosewordenglish.js";
 import "./answer/answer-choosewordgerman.js";
 import "./answer/answer-choosevoiceenglish.js";
 import "./answer/answer-typewordenglish.js";
 import "./answer/answer-chooseimage.js";
 
-// === CONSTANTS ===
 // All available question–answer combinations
 const MODES = [    {
         question: "vocab-question-wordgerman",
@@ -55,7 +52,6 @@ function shuffle(arr) {
     return arr.sort(() => Math.random() - 0.5);
 }
 
-// === COMPONENT ===
 class VocabTrainer extends HTMLElement {
     constructor() {
         super();
