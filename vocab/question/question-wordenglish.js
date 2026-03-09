@@ -1,10 +1,3 @@
-// vocab/question/question-wordenglish.js
-//
-// Reverse-mode question component.
-// Displays the English word as the prompt,
-// matching the original "Wie heißt X auf Englisch?" behavior but reversed.
-//
-
 class VocabQuestionWordEnglish extends HTMLElement {
     constructor() {
         super();
@@ -28,11 +21,7 @@ class VocabQuestionWordEnglish extends HTMLElement {
       <div class="question"></div>
     `;
 
-        const q = this.shadowRoot.querySelector(".question");
-
-        // Mirror phrasing from the German→English question,
-        // now asking for the German translation.
-        q.textContent = `Wie heißt „${this.vocab.en}” auf Deutsch?`;
+        const q = this.shadowRoot.querySelector(".question");        q.textContent = `Wie heißt „${this.vocab.en}” auf Deutsch?`;
     }
 }
 

@@ -1,14 +1,3 @@
-// game/game-lobby.js
-//
-// Central hub for all fun-games.
-// Usage (from app-shell):
-//   gameLobby.pointsManager = pointsManager;
-//   gameLobby.open();
-//
-// Internally manages three screens: list → playing → result.
-// Deducts cost on game start, awards pointsEarned on game end.
-// All events from child game components are caught on this.shadowRoot.
-
 import "./rocket-game.js";
 import "./flappy-game.js";
 import "./jump-game.js";
@@ -88,7 +77,6 @@ function saveHighscore(id, score) {
     return false;
 }
 
-// ─── component ────────────────────────────────────────────────────────────────
 
 class GameLobby extends HTMLElement {
     constructor() {
@@ -103,8 +91,6 @@ class GameLobby extends HTMLElement {
         this._setupGlobalListeners();
     }
 
-    // ── public API ────────────────────────────────────────────────────────────
-
     open() {
         this.shadowRoot.querySelector(".overlay").classList.add("active");
         this._showList();
@@ -114,8 +100,6 @@ class GameLobby extends HTMLElement {
         this._clearSlot();
         this.shadowRoot.querySelector(".overlay").classList.remove("active");
     }
-
-    // ── shell ─────────────────────────────────────────────────────────────────
 
     _renderShell() {
         this.shadowRoot.innerHTML = `
@@ -283,22 +267,15 @@ class GameLobby extends HTMLElement {
           </div>
         </div>
 
-      </div>`;
-
-        // static button wiring
-        this.shadowRoot.querySelector(".close-lobby-btn").onclick = () => this.close();
+      </div>`;        this.shadowRoot.querySelector(".close-lobby-btn").onclick = () => this.close();
         this.shadowRoot.getElementById("btn-back").onclick  = () => this._showList();
         this.shadowRoot.getElementById("quit-btn").onclick  = () => this._handleQuit();
     }
-
-    // ── listeners for game events ─────────────────────────────────────────────
 
     _setupGlobalListeners() {
         this.shadowRoot.addEventListener("game-over",   e => this._handleGameOver(e));
         this.shadowRoot.addEventListener("close-game",  ()  => this._handleCloseGame());
     }
-
-    // ── screens ───────────────────────────────────────────────────────────────
 
     _showList() {
         this._clearSlot();
@@ -345,15 +322,11 @@ class GameLobby extends HTMLElement {
         this.shadowRoot.getElementById("r-hs").textContent =
             isNewHS ? "🎉 Neuer Highscore!" : "";
 
-        // "Play again" — check if still affordable
-        const canAfford = this._pm()?.points >= game.cost;
         const btnAgain  = this.shadowRoot.getElementById("btn-again");
         btnAgain.disabled = !canAfford;
         btnAgain.title    = canAfford ? "" : `Zu wenig Punkte (${game.cost} benötigt)`;
         btnAgain.onclick  = () => this._startGame(game.id);
     }
-
-    // ── game lifecycle ────────────────────────────────────────────────────────
 
     _renderCards() {
         const pm = this._pm();
@@ -421,8 +394,6 @@ class GameLobby extends HTMLElement {
         this._clearSlot();
         this._showList();
     }
-
-    // ── helpers ───────────────────────────────────────────────────────────────
 
     _pm() { return this.pointsManager ?? null; }
 }

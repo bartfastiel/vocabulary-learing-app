@@ -1,5 +1,3 @@
-// vocab/question/question-wordGerman.js
-
 class VocabQuestionWordGerman extends HTMLElement {
     constructor() {
         super();
@@ -11,9 +9,7 @@ class VocabQuestionWordGerman extends HTMLElement {
         this.render();
     }
 
-    render() {
-        // identical visual styling to the original .question element
-        this.shadowRoot.innerHTML = `
+    render() {        this.shadowRoot.innerHTML = `
       <style>
         .question {
           font-size: 1.3rem;
@@ -24,11 +20,7 @@ class VocabQuestionWordGerman extends HTMLElement {
       <div class="question"></div>
     `;
 
-        const q = this.shadowRoot.querySelector(".question");
-
-        // exactly the same text shown in the original code
-        // for mode "text" (German → English)
-        q.textContent = `Wie heißt „${this.vocab.de}” auf Englisch?`;
+        const q = this.shadowRoot.querySelector(".question");        q.textContent = `Wie heißt „${this.vocab.de}” auf Englisch?`;
     }
 }
 

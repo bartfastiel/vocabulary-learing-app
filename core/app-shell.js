@@ -1,9 +1,3 @@
-// core/app-shell.js
-//
-// Layout: headline on top, below a two-column grid with equal-height
-// score and streak boxes.
-//
-
 import "./help-overlay.js";
 import "../vocab/vocab.js";
 import "../vocab/vocab-editor.js";
@@ -511,22 +505,14 @@ class AppShell extends HTMLElement {
         this._startup();
     }
 
-    // ── Startup: profile selection → role selection → app ─────────────────────
-
     _startup() {
         const profiles = getProfiles();
         const activeId = getActiveId();
         const active   = profiles.find(p => p.id === activeId);
 
-        if (profiles.length === 0) {
-            // First launch — show new-profile form directly
-            this._showProfileOverlay(true);
-        } else if (!active) {
-            // Profiles exist but none selected — show picker
-            this._showProfileOverlay(false);
-        } else {
-            // Already have an active profile — load it and start
-            activateProfile(activeId);
+        if (profiles.length === 0) {            this._showProfileOverlay(true);
+        } else if (!active) {            this._showProfileOverlay(false);
+        } else {            activateProfile(activeId);
             this.init();
         }
     }
@@ -603,8 +589,6 @@ class AppShell extends HTMLElement {
         });
     }
 
-    // ── Background theme ──────────────────────────────────────────────────────
-
     _applyBgTheme(key) {
         const bg = this.shadowRoot.getElementById("bg");
         if (!bg) return;
@@ -615,13 +599,9 @@ class AppShell extends HTMLElement {
         }
     }
 
-    // ── App init (called only after a profile is active) ──────────────────────
-
     init() {
         const treasureEl = this.shadowRoot.getElementById("treasure");
         const pointsManager = new PointsManager(this.shadowRoot);
-
-        // ── Rollenauswahl ──
         const roleOverlay = this.shadowRoot.getElementById("role-overlay");
         const applyRole = (role) => {
             localStorage.setItem("userRole", role);
@@ -636,29 +616,17 @@ class AppShell extends HTMLElement {
         }
         roleOverlay.querySelectorAll(".role-btn").forEach(btn => {
             btn.onclick = () => applyRole(btn.dataset.role);
-        });
-
-        // Connect trainer with points manager
-        const trainer = this.shadowRoot.querySelector("vocab-trainer");
-        trainer.points = pointsManager;
-
-        // Connect game lobby with points manager
-        const gameLobby = this.shadowRoot.querySelector("game-lobby");
+        });        const trainer = this.shadowRoot.querySelector("vocab-trainer");
+        trainer.points = pointsManager;        const gameLobby = this.shadowRoot.querySelector("game-lobby");
         gameLobby.pointsManager = pointsManager;
 
         treasureEl.addEventListener("click", () => {
             if (treasureEl.classList.contains("disabled")) return;
             gameLobby.open();
-        });
-
-        // App background theme
-        this._applyBgTheme(localStorage.getItem("appBg") || "dark");
+        });        this._applyBgTheme(localStorage.getItem("appBg") || "dark");
         this.shadowRoot.addEventListener("bg-changed", e => {
             this._applyBgTheme(e.detail.theme);
-        });
-
-        // Avatar
-        const avatarMini = this.shadowRoot.getElementById("avatar-mini");
+        });        const avatarMini = this.shadowRoot.getElementById("avatar-mini");
         const avatarBuilder = this.shadowRoot.querySelector("avatar-builder");
         const refreshAvatar = () => {
             const svg = getAvatarSVG();
@@ -671,16 +639,11 @@ class AppShell extends HTMLElement {
         this.shadowRoot.addEventListener("avatar-saved", refreshAvatar);
         this.shadowRoot.addEventListener("show-role-select", () => {
             roleOverlay.classList.remove("hidden");
-        });
-
-        // Profile switcher under avatar
-        const profile = getActiveProfile();
+        });        const profile = getActiveProfile();
         const switcherName = this.shadowRoot.getElementById("profile-switcher-name");
         if (switcherName && profile) switcherName.textContent = profile.name;
         this.shadowRoot.getElementById("profile-switcher").onclick = () => {
-            saveSnapshot();
-            // Reshow profile picker (wired to reload when new profile picked)
-            const overlay = this.shadowRoot.getElementById("profile-overlay");
+            saveSnapshot();            const overlay = this.shadowRoot.getElementById("profile-overlay");
             const grid    = this.shadowRoot.getElementById("profile-grid");
             this.shadowRoot.getElementById("profile-pick-view").hidden = false;
             this.shadowRoot.getElementById("profile-new-view").hidden  = true;
@@ -689,13 +652,7 @@ class AppShell extends HTMLElement {
                 location.reload();
             });
             overlay.classList.remove("hidden");
-        };
-
-        // Save snapshot on page unload
-        window.addEventListener("beforeunload", () => saveSnapshot());
-
-        // Vocab editor
-        const vocabEditor = this.shadowRoot.querySelector("vocab-editor");
+        };        window.addEventListener("beforeunload", () => saveSnapshot());        const vocabEditor = this.shadowRoot.querySelector("vocab-editor");
         this.shadowRoot.getElementById("edit-vocab-btn").onclick = () => vocabEditor.open();
         vocabEditor.onSaved = () => {
             trainer.reload();
@@ -713,19 +670,10 @@ class AppShell extends HTMLElement {
         }
     }
 
-    async startHelp(help) {
-
-        // Warten bis vocab-trainer im Shadow DOM sichtbar ist
-        const trainer = await this.waitFor(() =>
+    async startHelp(help) {        const trainer = await this.waitFor(() =>
             this.shadowRoot.querySelector("vocab-trainer")
         );
-        if (!trainer) return console.warn("Tutorial: Kein vocab-trainer gefunden");
-
-        // Warten bis ShadowRoot existiert
-        await this.waitFor(() => trainer.shadowRoot);
-
-        // jetzt im inneren Shadow warten:
-        await this.waitFor(() => trainer.shadowRoot.querySelector(".lesson-header"));
+        if (!trainer) return console.warn("Tutorial: Kein vocab-trainer gefunden");        await this.waitFor(() => trainer.shadowRoot);        await this.waitFor(() => trainer.shadowRoot.querySelector(".lesson-header"));
         await this.waitFor(() => trainer.shadowRoot.querySelector("#question"));
         await this.waitFor(() => trainer.shadowRoot.querySelector("#answer"));
 

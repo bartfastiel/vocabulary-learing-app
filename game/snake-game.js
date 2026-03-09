@@ -1,7 +1,3 @@
-// game/snake-game.js
-// Classic Snake. Arrow keys / WASD / swipe to steer. Eat apples, avoid walls and yourself.
-// Fires CustomEvent("game-over", { bubbles: true, detail: { score, pointsEarned } })
-
 const COLS = 20, ROWS = 20, CELL = 18;
 const CW = COLS * CELL, CH = ROWS * CELL;
 const TICK_MS = 140;
@@ -72,10 +68,7 @@ class SnakeGame extends HTMLElement {
                 if (d.x !== -this._dir.x || d.y !== -this._dir.y) this._nextDir = d;
                 if (!this._alive && !this._dead) this._startGame();
             }
-        }, sig);
-
-        // swipe
-        let tx, ty;
+        }, sig);        let tx, ty;
         this._cv.addEventListener("touchstart", e => {
             tx = e.touches[0].clientX; ty = e.touches[0].clientY;
             if (!this._alive && !this._dead) this._startGame();
@@ -101,12 +94,7 @@ class SnakeGame extends HTMLElement {
     _step() {
         if (!this._alive) return;
         this._dir = this._nextDir;
-        const head = { x: this._snake[0].x + this._dir.x, y: this._snake[0].y + this._dir.y };
-
-        // wall collision
-        if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) { this._die(); return; }
-        // self collision
-        if (this._snake.some(s => s.x === head.x && s.y === head.y)) { this._die(); return; }
+        const head = { x: this._snake[0].x + this._dir.x, y: this._snake[0].y + this._dir.y };        if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) { this._die(); return; }        if (this._snake.some(s => s.x === head.x && s.y === head.y)) { this._die(); return; }
 
         this._snake.unshift(head);
 
@@ -114,9 +102,7 @@ class SnakeGame extends HTMLElement {
         if (head.x === this._apple.x && head.y === this._apple.y) {
             this._score++;
             this._apple = this._spawnApple();
-            ate = true;
-            // spawn bonus apple every 5
-            if (this._score % 5 === 0) {
+            ate = true;            if (this._score % 5 === 0) {
                 this._bonusApple = this._spawnApple();
                 this._bonusTimer = 20; // lasts 20 ticks
             }
@@ -146,17 +132,12 @@ class SnakeGame extends HTMLElement {
     }
 
     _draw() {
-        const ctx = this._ctx;
-        // background grid
-        ctx.fillStyle = "#0a1628";
+        const ctx = this._ctx;        ctx.fillStyle = "#0a1628";
         ctx.fillRect(0, 0, CW, CH);
         ctx.strokeStyle = "rgba(255,255,255,0.04)";
         ctx.lineWidth = 0.5;
         for (let x = 0; x <= COLS; x++) { ctx.beginPath(); ctx.moveTo(x*CELL,0); ctx.lineTo(x*CELL,CH); ctx.stroke(); }
-        for (let y = 0; y <= ROWS; y++) { ctx.beginPath(); ctx.moveTo(0,y*CELL); ctx.lineTo(CW,y*CELL); ctx.stroke(); }
-
-        // snake
-        this._snake.forEach((seg, i) => {
+        for (let y = 0; y <= ROWS; y++) { ctx.beginPath(); ctx.moveTo(0,y*CELL); ctx.lineTo(CW,y*CELL); ctx.stroke(); }        this._snake.forEach((seg, i) => {
             const t = i / this._snake.length;
             const r = Math.round(50  + (1 - t) * 75);
             const g = Math.round(200 + (1 - t) * 55);
@@ -165,9 +146,7 @@ class SnakeGame extends HTMLElement {
             ctx.beginPath();
             ctx.roundRect(seg.x * CELL + 1, seg.y * CELL + 1, CELL - 2, CELL - 2, i === 0 ? 5 : 3);
             ctx.fill();
-        });
-        // head eyes
-        if (this._snake.length) {
+        });        if (this._snake.length) {
             const h = this._snake[0];
             ctx.fillStyle = "white";
             const ex = h.x * CELL + CELL / 2;
@@ -177,36 +156,21 @@ class SnakeGame extends HTMLElement {
             ctx.fillStyle = "#111";
             ctx.beginPath(); ctx.arc(ex - 2.5, ey - 2, 1, 0, Math.PI*2); ctx.fill();
             ctx.beginPath(); ctx.arc(ex + 3.5, ey - 2, 1, 0, Math.PI*2); ctx.fill();
-        }
-
-        // apple
-        ctx.font = `${CELL + 2}px sans-serif`;
+        }        ctx.font = `${CELL + 2}px sans-serif`;
         ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        ctx.fillText("🍎", this._apple.x * CELL + CELL/2, this._apple.y * CELL + CELL/2 + 1);
-
-        // bonus apple
-        if (this._bonusApple) {
+        ctx.fillText("🍎", this._apple.x * CELL + CELL/2, this._apple.y * CELL + CELL/2 + 1);        if (this._bonusApple) {
             ctx.fillText("⭐", this._bonusApple.x * CELL + CELL/2, this._bonusApple.y * CELL + CELL/2 + 1);
-        }
-
-        // score
-        ctx.fillStyle = "rgba(0,0,0,0.55)";
+        }        ctx.fillStyle = "rgba(0,0,0,0.55)";
         ctx.beginPath(); ctx.roundRect(4, 4, 110, 26, 6); ctx.fill();
         ctx.fillStyle = "white"; ctx.font = "bold 14px 'Segoe UI',sans-serif";
         ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-        ctx.fillText(`🍎 ${this._score}`, 12, 22);
-
-        // "press key to start"
-        if (!this._alive && !this._dead) {
+        ctx.fillText(`🍎 ${this._score}`, 12, 22);        if (!this._alive && !this._dead) {
             ctx.fillStyle = "rgba(0,0,0,0.6)";
             ctx.beginPath(); ctx.roundRect(CW/2-120, CH/2-22, 240, 44, 10); ctx.fill();
             ctx.fillStyle = "white"; ctx.font = "bold 16px 'Segoe UI',sans-serif";
             ctx.textAlign = "center"; ctx.textBaseline = "middle";
             ctx.fillText("Taste drücken / Wischen ✋", CW/2, CH/2);
-        }
-
-        // death
-        if (this._dead) {
+        }        if (this._dead) {
             ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.fillRect(0,0,CW,CH);
             ctx.fillStyle = "white"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
             ctx.font = `bold ${CELL*2}px 'Segoe UI',sans-serif`;
