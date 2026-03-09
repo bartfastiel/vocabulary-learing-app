@@ -1,7 +1,3 @@
-// game/jump-game.js
-// Endless side-scrolling runner. Tap / Space to jump (double-jump allowed).
-// Fires CustomEvent("game-over", { bubbles: true, detail: { score, pointsEarned } })
-
 const CW = 400, CH = 260;
 const GY  = 218;    // ground y (top of ground strip)
 const GH  = CH - GY; // ground strip height
@@ -41,8 +37,6 @@ class JumpGame extends HTMLElement {
         this._controller.abort();
     }
 
-    // ── state ──────────────────────────────────────────────────────────────────
-
     _init() {
         this._char    = { y: GY - CHAR_H, vy: 0, jumpsLeft: 2, onGround: true };
         this._obs     = [];
@@ -51,13 +45,11 @@ class JumpGame extends HTMLElement {
         this._speed   = BASE_SPEED;
         this._dead    = false;
         this._running = false;
-        this._bgX     = 0;   // parallax clouds
+        this._bgX     = 0;  
         this._legPhase = 0;
         this._nextObs  = 80 + Math.random() * 60;
         this._countdown = 3;
     }
-
-    // ── countdown before game ──────────────────────────────────────────────────
 
     _startCountdown() {
         this._drawStatic();
@@ -92,8 +84,6 @@ class JumpGame extends HTMLElement {
         ctx.textBaseline = "alphabetic";
     }
 
-    // ── input ──────────────────────────────────────────────────────────────────
-
     _bindInput() {
         const sig = { signal: this._controller.signal };
         const jump = () => {
@@ -108,18 +98,13 @@ class JumpGame extends HTMLElement {
         document.addEventListener("keydown", e => { if (e.code === "Space") { e.preventDefault(); jump(); } }, sig);
     }
 
-    // ── update ─────────────────────────────────────────────────────────────────
-
     _update() {
         if (!this._running || this._dead) return;
 
         this._frame++;
         this._score = Math.floor(this._frame / 60);
         this._speed = BASE_SPEED;
-        this._bgX  -= this._speed * 0.3;
-
-        // character physics
-        this._char.vy += GRAVITY;
+        this._bgX  -= this._speed * 0.3;        this._char.vy += GRAVITY;
         this._char.y  += this._char.vy;
 
         if (this._char.y >= GY - CHAR_H) {
@@ -128,10 +113,7 @@ class JumpGame extends HTMLElement {
             this._char.jumpsLeft = 2;
             this._char.onGround  = true;
         }
-        if (this._char.onGround) this._legPhase = (this._frame * 0.4) % (Math.PI * 2);
-
-        // spawn obstacle
-        this._nextObs -= this._speed;
+        if (this._char.onGround) this._legPhase = (this._frame * 0.4) % (Math.PI * 2);        this._nextObs -= this._speed;
         if (this._nextObs <= 0) {
             const phase = this._score < 8 ? 0 : this._score < 18 ? 1 : 2;
             const heights = [[45, 55, 65], [55, 75, 85], [65, 85, 100]][phase];
@@ -144,14 +126,8 @@ class JumpGame extends HTMLElement {
                 color: colors[Math.floor(Math.random() * colors.length)],
             });
             this._nextObs = 90 + Math.random() * 80;
-        }
-
-        // move obstacles
-        for (const ob of this._obs) ob.x -= this._speed;
-        this._obs = this._obs.filter(ob => ob.x + ob.w > 0);
-
-        // collision (AABB with small margin)
-        const cx = CHAR_X + 3, cy = this._char.y + 4;
+        }        for (const ob of this._obs) ob.x -= this._speed;
+        this._obs = this._obs.filter(ob => ob.x + ob.w > 0);        const cx = CHAR_X + 3, cy = this._char.y + 4;
         const cw = CHAR_W - 6, ch = CHAR_H - 6;
         for (const ob of this._obs) {
             const oy = GY - ob.h;
@@ -175,18 +151,11 @@ class JumpGame extends HTMLElement {
         }, 900);
     }
 
-    // ── render ─────────────────────────────────────────────────────────────────
-
     _drawBackground() {
-        const ctx = this._ctx;
-        // sky
-        const sky = ctx.createLinearGradient(0, 0, 0, GY);
+        const ctx = this._ctx;        const sky = ctx.createLinearGradient(0, 0, 0, GY);
         sky.addColorStop(0, "#87CEEB"); sky.addColorStop(1, "#c8e6f5");
         ctx.fillStyle = sky;
-        ctx.fillRect(0, 0, CW, GY);
-
-        // clouds (parallax)
-        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.fillRect(0, 0, CW, GY);        ctx.fillStyle = "rgba(255,255,255,0.85)";
         [[80,30,30],[200,22,22],[310,38,26],[60,50,18],[240,45,20]].forEach(([bx,by,r]) => {
             const x = ((bx + Math.abs(this._bgX)) % (CW + 120)) - 60;
             ctx.beginPath();
@@ -194,10 +163,7 @@ class JumpGame extends HTMLElement {
             ctx.arc(x + r * 0.7, by - r * 0.3, r * 0.65, 0, Math.PI * 2);
             ctx.arc(x + r * 1.3, by, r * 0.7, 0, Math.PI * 2);
             ctx.fill();
-        });
-
-        // ground strip
-        ctx.fillStyle = "#6DB33F";
+        });        ctx.fillStyle = "#6DB33F";
         ctx.fillRect(0, GY, CW, 12);
         ctx.fillStyle = "#C8A96E";
         ctx.fillRect(0, GY + 12, CW, GH - 12);
@@ -207,83 +173,51 @@ class JumpGame extends HTMLElement {
         const ctx = this._ctx;
         const cx  = CHAR_X;
         const cy  = this._char.y;
-        const onG = this._char.onGround;
-
-        // legs (animated when running)
-        const lp = onG ? this._legPhase : 0;
+        const onG = this._char.onGround;        const lp = onG ? this._legPhase : 0;
         ctx.fillStyle = "#2962FF";
         const legH = 14;
         ctx.fillRect(cx + 4,  cy + CHAR_H - legH, 8, legH + Math.sin(lp) * 3 * (onG ? 1 : 0));
-        ctx.fillRect(cx + 16, cy + CHAR_H - legH, 8, legH - Math.sin(lp) * 3 * (onG ? 1 : 0));
-
-        // body
-        ctx.fillStyle = "#1565C0";
+        ctx.fillRect(cx + 16, cy + CHAR_H - legH, 8, legH - Math.sin(lp) * 3 * (onG ? 1 : 0));        ctx.fillStyle = "#1565C0";
         ctx.beginPath();
         ctx.roundRect(cx, cy + 12, CHAR_W, CHAR_H - 14, 6);
-        ctx.fill();
-
-        // head
-        const skinColors = ["#FFDBB4","#F1C27D","#C68642"];
+        ctx.fill();        const skinColors = ["#FFDBB4","#F1C27D","#C68642"];
         ctx.fillStyle = skinColors[0];
         ctx.beginPath();
         ctx.arc(cx + CHAR_W / 2, cy + 8, 11, 0, Math.PI * 2);
-        ctx.fill();
-
-        // eyes
-        ctx.fillStyle = "#333";
+        ctx.fill();        ctx.fillStyle = "#333";
         ctx.fillRect(cx + CHAR_W / 2 - 5, cy + 5, 3, 3);
-        ctx.fillRect(cx + CHAR_W / 2 + 2, cy + 5, 3, 3);
-
-        // smile
-        ctx.strokeStyle = "#333"; ctx.lineWidth = 1.5;
+        ctx.fillRect(cx + CHAR_W / 2 + 2, cy + 5, 3, 3);        ctx.strokeStyle = "#333"; ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.arc(cx + CHAR_W / 2, cy + 10, 4, 0, Math.PI);
-        ctx.stroke();
-
-        // arms
-        ctx.fillStyle = "#1565C0";
+        ctx.stroke();        ctx.fillStyle = "#1565C0";
         ctx.fillRect(cx - 5,        cy + 14, 6, 10);
         ctx.fillRect(cx + CHAR_W - 1, cy + 14, 6, 10);
     }
 
     _draw() {
         const ctx = this._ctx;
-        this._drawBackground();
-
-        // obstacles
-        for (const ob of this._obs) {
+        this._drawBackground();        for (const ob of this._obs) {
             const oy = GY - ob.h;
             ctx.fillStyle = ob.color;
             ctx.beginPath();
             ctx.roundRect(ob.x, oy, ob.w, ob.h, [4, 4, 0, 0]);
-            ctx.fill();
-            // darker top cap
-            ctx.fillStyle = "rgba(0,0,0,0.25)";
+            ctx.fill();            ctx.fillStyle = "rgba(0,0,0,0.25)";
             ctx.beginPath();
             ctx.roundRect(ob.x, oy, ob.w, 8, [4, 4, 0, 0]);
             ctx.fill();
         }
 
-        this._drawChar();
-
-        // HUD
-        ctx.fillStyle = "rgba(0,0,0,0.55)";
+        this._drawChar();        ctx.fillStyle = "rgba(0,0,0,0.55)";
         ctx.beginPath(); ctx.roundRect(6, 6, 115, 28, 6); ctx.fill();
         ctx.fillStyle = "white";
         ctx.font = "bold 14px 'Segoe UI', sans-serif";
         ctx.textAlign = "left";
-        ctx.fillText(`⏱ ${this._score}s   💨 ${this._speed.toFixed(1)}x`, 14, 24);
-
-        // double-jump indicator
-        ctx.fillStyle = this._char.jumpsLeft === 2 ? "#4dd0e1"
+        ctx.fillText(`⏱ ${this._score}s   💨 ${this._speed.toFixed(1)}x`, 14, 24);        ctx.fillStyle = this._char.jumpsLeft === 2 ? "#4dd0e1"
                       : this._char.jumpsLeft === 1 ? "#FFD700"
                       : "rgba(255,255,255,0.2)";
         ctx.beginPath(); ctx.arc(CW - 20, 20, 8, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = this._char.jumpsLeft >= 2 ? "#4dd0e1" : "rgba(255,255,255,0.2)";
-        ctx.beginPath(); ctx.arc(CW - 36, 20, 8, 0, Math.PI * 2); ctx.fill();
-
-        // death overlay
-        if (this._dead) {
+        ctx.beginPath(); ctx.arc(CW - 36, 20, 8, 0, Math.PI * 2); ctx.fill();        if (this._dead) {
             ctx.fillStyle = "rgba(0,0,0,0.5)";
             ctx.fillRect(0, 0, CW, CH);
             ctx.fillStyle = "white";

@@ -1,6 +1,3 @@
-// core/profiles.js
-// Multi-profile support for a single device.
-
 const LS_ALL    = "allProfiles";
 const LS_ACTIVE = "activeProfileId";
 

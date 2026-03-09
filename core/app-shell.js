@@ -1,9 +1,3 @@
-// core/app-shell.js
-//
-// Layout: headline on top, below a two-column grid with equal-height
-// score and streak boxes.
-//
-
 import "./help-overlay.js";
 import "../vocab/vocab.js";
 import "../vocab/vocab-editor.js";
@@ -41,7 +35,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #091830 0%, #050d1a 60%, #010608 100%); }
         }
 
-        /* Sterne-Partikel */
         #bg::before {
           content: "";
           position: absolute; inset: 0;
@@ -178,7 +171,6 @@ class AppShell extends HTMLElement {
         #avatar-mini { width: 100%; height: 100%; }
         #avatar-mini svg { width: 100%; height: 100%; display: block; }
 
-        /* ── Profilwechsler unter Avatar ── */
         #profile-switcher {
           position: absolute; top: 214px; left: 12px; z-index: 2;
           width: 200px; text-align: center; cursor: pointer;
@@ -191,7 +183,6 @@ class AppShell extends HTMLElement {
         }
         #profile-switcher:hover { background: rgba(3,60,110,0.85); color: #e0f2fe; }
 
-        /* ── Profilauswahl Overlay ── */
         #profile-overlay {
           position: fixed; inset: 0; z-index: 9998;
           background: rgba(0,5,15,0.96);
@@ -284,7 +275,6 @@ class AppShell extends HTMLElement {
         }
         #btn-profile-create:hover { filter: brightness(1.1); }
 
-        /* ── Rollenauswahl ── */
         #role-overlay {
           position: fixed; inset: 0; z-index: 9999;
           background: rgba(0,5,15,0.95);
@@ -330,7 +320,6 @@ class AppShell extends HTMLElement {
         .role-btn .role-sub { font-size: 0.75rem; color: #7dd3fc; font-weight: normal; }
 
         /* ── Background theme overrides ── */
-        /* ocean */
         #bg[data-theme="ocean"] { animation-name: bgShift-ocean; }
         #bg[data-theme="ocean"] .orb1 { background: #0e7490; }
         #bg[data-theme="ocean"] .orb2 { background: #06b6d4; }
@@ -343,7 +332,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #052535 0%, #021a22 60%, #010810 100%); }
         }
 
-        /* purple */
         #bg[data-theme="purple"] { animation-name: bgShift-purple; }
         #bg[data-theme="purple"] .orb1 { background: #7c3aed; }
         #bg[data-theme="purple"] .orb2 { background: #a855f7; }
@@ -356,7 +344,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #180630 0%, #0f0520 60%, #040108 100%); }
         }
 
-        /* forest */
         #bg[data-theme="forest"] { animation-name: bgShift-forest; }
         #bg[data-theme="forest"] .orb1 { background: #166534; }
         #bg[data-theme="forest"] .orb2 { background: #22c55e; }
@@ -369,7 +356,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #08220c 0%, #041505 60%, #010802 100%); }
         }
 
-        /* sunset */
         #bg[data-theme="sunset"] { animation-name: bgShift-sunset; }
         #bg[data-theme="sunset"] .orb1 { background: #c2410c; }
         #bg[data-theme="sunset"] .orb2 { background: #f97316; }
@@ -382,7 +368,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #250e06 0%, #1a0805 60%, #080201 100%); }
         }
 
-        /* rose */
         #bg[data-theme="rose"] { animation-name: bgShift-rose; }
         #bg[data-theme="rose"] .orb1 { background: #be185d; }
         #bg[data-theme="rose"] .orb2 { background: #ec4899; }
@@ -395,7 +380,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #250614 0%, #1a0510 60%, #080206 100%); }
         }
 
-        /* gold */
         #bg[data-theme="gold"] { animation-name: bgShift-gold; }
         #bg[data-theme="gold"] .orb1 { background: #b45309; }
         #bg[data-theme="gold"] .orb2 { background: #eab308; }
@@ -408,7 +392,6 @@ class AppShell extends HTMLElement {
           100% { background: radial-gradient(ellipse at 40% 80%, #221500 0%, #1a1000 60%, #080600 100%); }
         }
 
-        /* ice */
         #bg[data-theme="ice"] { animation-name: bgShift-ice; }
         #bg[data-theme="ice"] .orb1 { background: #60a5fa; }
         #bg[data-theme="ice"] .orb2 { background: #93c5fd; }
@@ -423,7 +406,6 @@ class AppShell extends HTMLElement {
 
       </style>
 
-      <!-- Profilauswahl -->
       <div id="profile-overlay" class="hidden">
         <div id="profile-box">
           <div id="profile-pick-view">
@@ -511,22 +493,14 @@ class AppShell extends HTMLElement {
         this._startup();
     }
 
-    // ── Startup: profile selection → role selection → app ─────────────────────
-
     _startup() {
         const profiles = getProfiles();
         const activeId = getActiveId();
         const active   = profiles.find(p => p.id === activeId);
 
-        if (profiles.length === 0) {
-            // First launch — show new-profile form directly
-            this._showProfileOverlay(true);
-        } else if (!active) {
-            // Profiles exist but none selected — show picker
-            this._showProfileOverlay(false);
-        } else {
-            // Already have an active profile — load it and start
-            activateProfile(activeId);
+        if (profiles.length === 0) {            this._showProfileOverlay(true);
+        } else if (!active) {            this._showProfileOverlay(false);
+        } else {            activateProfile(activeId);
             this.init();
         }
     }
@@ -603,8 +577,6 @@ class AppShell extends HTMLElement {
         });
     }
 
-    // ── Background theme ──────────────────────────────────────────────────────
-
     _applyBgTheme(key) {
         const bg = this.shadowRoot.getElementById("bg");
         if (!bg) return;
@@ -615,13 +587,9 @@ class AppShell extends HTMLElement {
         }
     }
 
-    // ── App init (called only after a profile is active) ──────────────────────
-
     init() {
         const treasureEl = this.shadowRoot.getElementById("treasure");
         const pointsManager = new PointsManager(this.shadowRoot);
-
-        // ── Rollenauswahl ──
         const roleOverlay = this.shadowRoot.getElementById("role-overlay");
         const applyRole = (role) => {
             localStorage.setItem("userRole", role);
@@ -636,29 +604,17 @@ class AppShell extends HTMLElement {
         }
         roleOverlay.querySelectorAll(".role-btn").forEach(btn => {
             btn.onclick = () => applyRole(btn.dataset.role);
-        });
-
-        // Connect trainer with points manager
-        const trainer = this.shadowRoot.querySelector("vocab-trainer");
-        trainer.points = pointsManager;
-
-        // Connect game lobby with points manager
-        const gameLobby = this.shadowRoot.querySelector("game-lobby");
+        });        const trainer = this.shadowRoot.querySelector("vocab-trainer");
+        trainer.points = pointsManager;        const gameLobby = this.shadowRoot.querySelector("game-lobby");
         gameLobby.pointsManager = pointsManager;
 
         treasureEl.addEventListener("click", () => {
             if (treasureEl.classList.contains("disabled")) return;
             gameLobby.open();
-        });
-
-        // App background theme
-        this._applyBgTheme(localStorage.getItem("appBg") || "dark");
+        });        this._applyBgTheme(localStorage.getItem("appBg") || "dark");
         this.shadowRoot.addEventListener("bg-changed", e => {
             this._applyBgTheme(e.detail.theme);
-        });
-
-        // Avatar
-        const avatarMini = this.shadowRoot.getElementById("avatar-mini");
+        });        const avatarMini = this.shadowRoot.getElementById("avatar-mini");
         const avatarBuilder = this.shadowRoot.querySelector("avatar-builder");
         const refreshAvatar = () => {
             const svg = getAvatarSVG();
@@ -671,16 +627,11 @@ class AppShell extends HTMLElement {
         this.shadowRoot.addEventListener("avatar-saved", refreshAvatar);
         this.shadowRoot.addEventListener("show-role-select", () => {
             roleOverlay.classList.remove("hidden");
-        });
-
-        // Profile switcher under avatar
-        const profile = getActiveProfile();
+        });        const profile = getActiveProfile();
         const switcherName = this.shadowRoot.getElementById("profile-switcher-name");
         if (switcherName && profile) switcherName.textContent = profile.name;
         this.shadowRoot.getElementById("profile-switcher").onclick = () => {
-            saveSnapshot();
-            // Reshow profile picker (wired to reload when new profile picked)
-            const overlay = this.shadowRoot.getElementById("profile-overlay");
+            saveSnapshot();            const overlay = this.shadowRoot.getElementById("profile-overlay");
             const grid    = this.shadowRoot.getElementById("profile-grid");
             this.shadowRoot.getElementById("profile-pick-view").hidden = false;
             this.shadowRoot.getElementById("profile-new-view").hidden  = true;
@@ -689,13 +640,7 @@ class AppShell extends HTMLElement {
                 location.reload();
             });
             overlay.classList.remove("hidden");
-        };
-
-        // Save snapshot on page unload
-        window.addEventListener("beforeunload", () => saveSnapshot());
-
-        // Vocab editor
-        const vocabEditor = this.shadowRoot.querySelector("vocab-editor");
+        };        window.addEventListener("beforeunload", () => saveSnapshot());        const vocabEditor = this.shadowRoot.querySelector("vocab-editor");
         this.shadowRoot.getElementById("edit-vocab-btn").onclick = () => vocabEditor.open();
         vocabEditor.onSaved = () => {
             trainer.reload();
@@ -713,19 +658,10 @@ class AppShell extends HTMLElement {
         }
     }
 
-    async startHelp(help) {
-
-        // Warten bis vocab-trainer im Shadow DOM sichtbar ist
-        const trainer = await this.waitFor(() =>
+    async startHelp(help) {        const trainer = await this.waitFor(() =>
             this.shadowRoot.querySelector("vocab-trainer")
         );
-        if (!trainer) return console.warn("Tutorial: Kein vocab-trainer gefunden");
-
-        // Warten bis ShadowRoot existiert
-        await this.waitFor(() => trainer.shadowRoot);
-
-        // jetzt im inneren Shadow warten:
-        await this.waitFor(() => trainer.shadowRoot.querySelector(".lesson-header"));
+        if (!trainer) return console.warn("Tutorial: Kein vocab-trainer gefunden");        await this.waitFor(() => trainer.shadowRoot);        await this.waitFor(() => trainer.shadowRoot.querySelector(".lesson-header"));
         await this.waitFor(() => trainer.shadowRoot.querySelector("#question"));
         await this.waitFor(() => trainer.shadowRoot.querySelector("#answer"));
 
@@ -757,7 +693,6 @@ class AppShell extends HTMLElement {
             const start = performance.now();
             const tick = () => {
                 const result = fn();
-                console.log("waitFor tick:", result);
                 if (result) return resolve(result);
                 if (performance.now() - start > timeout) return resolve(null);
                 setTimeout(tick, interval);

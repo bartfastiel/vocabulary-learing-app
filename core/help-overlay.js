@@ -1,10 +1,3 @@
-// core/help-overlay.js
-//
-// Global tutorial/guide overlay.
-// Highlights specific UI areas with arrows and explanatory text.
-// "Weiter"-Button sitzt direkt in der gelben Bubble neben dem Highlight.
-//
-
 class VocabHelpOverlay extends HTMLElement {
     constructor() {
         super();
@@ -117,10 +110,7 @@ class VocabHelpOverlay extends HTMLElement {
         if (!step) {
             this.close();
             return;
-        }
-
-        // selector kann String oder Funktion sein
-        let target = null;
+        }        let target = null;
         if (typeof step.selector === "function") {
             target = step.selector();
         } else if (typeof step.selector === "string") {
@@ -133,35 +123,21 @@ class VocabHelpOverlay extends HTMLElement {
             return;
         }
 
-        const rect = target.getBoundingClientRect();
-
-        // Highlight über Ziel legen
-        this.hl.style.top = rect.top - 8 + "px";
+        const rect = target.getBoundingClientRect();        this.hl.style.top = rect.top - 8 + "px";
         this.hl.style.left = rect.left - 8 + "px";
         this.hl.style.width = rect.width + 16 + "px";
-        this.hl.style.height = rect.height + 16 + "px";
-
-        // Text setzen
-        this.bubbleText.innerHTML = step.text;
-
-        // Bubble und Pfeil grob unterhalb des Elements platzieren
-        const bubbleMargin = 12;
+        this.hl.style.height = rect.height + 16 + "px";        this.bubbleText.innerHTML = step.text;        const bubbleMargin = 12;
         const arrowHeight = 18;
 
         let bubbleTop = rect.bottom + arrowHeight + bubbleMargin;
-        let bubbleLeft = rect.left;
-
-        // ein bisschen innerhalb des Viewports halten
-        const vpWidth = window.innerWidth;
+        let bubbleLeft = rect.left;        const vpWidth = window.innerWidth;
         const vpHeight = window.innerHeight;
 
-        const bubbleWidth = 280; // max-width
+        const bubbleWidth = 280;
         if (bubbleLeft + bubbleWidth > vpWidth - 16) {
             bubbleLeft = vpWidth - bubbleWidth - 16;
         }
-        if (bubbleTop > vpHeight - 140) {
-            // wenn unten zu wenig Platz ist, nach oben über das Element
-            bubbleTop = rect.top - bubbleMargin - 120;
+        if (bubbleTop > vpHeight - 140) {            bubbleTop = rect.top - bubbleMargin - 120;
             this.arrow.style.top = rect.top - arrowHeight + "px";
             this.arrow.style.borderTopColor = "#fff8c6";
             this.arrow.style.transform = "rotate(180deg)";

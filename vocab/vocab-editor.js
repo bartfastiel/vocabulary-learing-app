@@ -1,13 +1,3 @@
-// vocab/vocab-editor.js
-//
-// Full-screen overlay to create and edit custom vocabulary lessons.
-// Custom lessons are stored in localStorage key "customVocab" as
-// [{ name, words: [{ de, en, allowImage: false }] }]
-//
-// Fires CustomEvent("vocab-updated", { bubbles: true, composed: true }) after saving.
-// Usage (from app-shell):
-//   editor.open();
-
 const LS_KEY = "customVocab";
 
 function loadCustom() {
@@ -17,7 +7,6 @@ function saveCustom(data) {
     localStorage.setItem(LS_KEY, JSON.stringify(data));
 }
 
-// ─── component ────────────────────────────────────────────────────────────────
 
 class VocabEditor extends HTMLElement {
     constructor() {
@@ -40,8 +29,6 @@ class VocabEditor extends HTMLElement {
     close() {
         this.shadowRoot.querySelector(".overlay").classList.remove("active");
     }
-
-    // ── shell ─────────────────────────────────────────────────────────────────
 
     _renderShell() {
         this.shadowRoot.innerHTML = `
@@ -218,16 +205,11 @@ class VocabEditor extends HTMLElement {
           </div>
 
         </div>
-      </div>`;
-
-        // static listeners
-        this.shadowRoot.querySelectorAll(".ph-close").forEach(b => b.onclick = () => this.close());
+      </div>`;        this.shadowRoot.querySelectorAll(".ph-close").forEach(b => b.onclick = () => this.close());
         this.shadowRoot.getElementById("btn-back").onclick       = () => this._showLessons();
         this.shadowRoot.getElementById("btn-save").onclick       = () => this._saveLesson();
         this.shadowRoot.getElementById("btn-del-lesson").onclick = () => this._deleteLesson();
     }
-
-    // ── lesson list screen ────────────────────────────────────────────────────
 
     _showLessons() {
         this.shadowRoot.getElementById("screen-lessons").hidden = false;
@@ -277,8 +259,6 @@ class VocabEditor extends HTMLElement {
         body.appendChild(addBtn);
     }
 
-    // ── lesson edit screen ────────────────────────────────────────────────────
-
     _showEdit(idx) {
         this._editIdx = idx;
         const isNew  = idx === -1;
@@ -290,10 +270,7 @@ class VocabEditor extends HTMLElement {
         this.shadowRoot.getElementById("edit-header-title").textContent =
             isNew ? "Neue Lektion" : lesson.name || "Lektion";
         this.shadowRoot.getElementById("lesson-name-input").value = lesson.name;
-        this.shadowRoot.getElementById("btn-del-lesson").hidden = isNew;
-
-        // Fill textarea with existing words
-        const ta = this.shadowRoot.getElementById("quick-input");
+        this.shadowRoot.getElementById("btn-del-lesson").hidden = isNew;        const ta = this.shadowRoot.getElementById("quick-input");
         ta.value = lesson.words.map(w => `${w.de} = ${w.en}`).join("\n");
         ta.focus();
     }

@@ -1,13 +1,5 @@
-// vocab/points.js
-//
-// Handles all point, streak, and treasure logic.
-// Mirrors the original inline implementation exactly.
-//
-
 export class PointsManager {
-    constructor(root) {
-        // root = shadowRoot of <app-shell>
-        this.root = root;
+    constructor(root) {        this.root = root;
 
         this.pointsEl = root.getElementById("points");
         this.streakEl = root.getElementById("streak");
@@ -23,8 +15,6 @@ export class PointsManager {
         this.streakRecordEl.textContent = this.streakRecord.toString();
         this.updatePoints(0); // ensure UI sync
     }
-
-    // --- called from answer components ---
     updatePoints(delta) {
         if (this._isDev) {
             this.points = Infinity;
@@ -61,8 +51,6 @@ export class PointsManager {
             body.classList.add("streak-broken");
         }
     }
-
-    // --- helpers ---
     checkTreasure() {
         if (this.points < 1) {
             this.treasureEl.classList.add("disabled");

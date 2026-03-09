@@ -1,47 +1,28 @@
-// vocab/vocab.js
-//
-// Pure orchestration: connects question and answer components.
-// No points, streaks, or treasure logic.
-// No mode-specific behavior — just flow control.
-//
-
-// --- imports (all lowercase names and explicit paths) ---
 import "./points.js";
 
-// Question types
 import "./question/question-wordgerman.js";
 import "./question/question-wordenglish.js";
 import "./question/question-voiceenglish.js";
 import "./question/question-image.js";
 
-// Answer types
 import "./answer/answer-choosewordenglish.js";
 import "./answer/answer-choosewordgerman.js";
 import "./answer/answer-choosevoiceenglish.js";
 import "./answer/answer-typewordenglish.js";
 import "./answer/answer-chooseimage.js";
 
-// === CONSTANTS ===
 // All available question–answer combinations
-const MODES = [
-    // === Text-based (German → English) ===
-    {
+const MODES = [    {
         question: "vocab-question-wordgerman",
         answer: "vocab-answer-choosewordenglish",
     },
     {
         question: "vocab-question-wordgerman",
         answer: "vocab-answer-typewordenglish",
-    },
-
-    // === Text-based (English → German) ===
-    {
+    },    {
         question: "vocab-question-wordenglish",
         answer: "vocab-answer-choosewordgerman",
-    },
-
-    // === Audio question → English answers ===
-    {
+    },    {
         question: "vocab-question-voiceenglish",
         answer: "vocab-answer-choosewordenglish",
     },
@@ -52,41 +33,25 @@ const MODES = [
     {
         question: "vocab-question-voiceenglish",
         answer: "vocab-answer-choosevoiceenglish",
-    },
-
-    // === Image question → English answers ===
-    {
+    },    {
         question: "vocab-question-image",
         answer: "vocab-answer-choosewordenglish",
     },
     {
         question: "vocab-question-image",
         answer: "vocab-answer-typewordenglish",
-    },
-
-    // === Audio question → Image answers ===
-    {
+    },    {
         question: "vocab-question-voiceenglish",
         answer: "vocab-answer-chooseimage",
-    },
-
-    // === Text question → Image answers ===
-    {
+    },    {
         question: "vocab-question-wordenglish",
         answer: "vocab-answer-chooseimage",
-    },
-
-    // === Future slots (planned / optional) ===
-    // { question: "vocab-question-descriptionenglish", answer: "vocab-answer-choosewordenglish" },
-    // { question: "vocab-question-wordgerman", answer: "vocab-answer-fillmissinglettersenglish" },
-    // { question: "vocab-question-wordenglish", answer: "vocab-answer-chooseimage" },
-];
+    },];
 
 function shuffle(arr) {
     return arr.sort(() => Math.random() - 0.5);
 }
 
-// === COMPONENT ===
 class VocabTrainer extends HTMLElement {
     constructor() {
         super();

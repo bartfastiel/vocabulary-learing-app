@@ -1,5 +1,3 @@
-// vocab/answer/answer-chooseWordEnglish.js
-
 import {playVoice} from "../../core/audio.js";
 import "./elements/next-button.js"
 
@@ -76,13 +74,7 @@ class VocabAnswerChooseWordEnglish extends HTMLElement {
                 (isCorrect ? this.soundCorrect : this.soundWrong).play();
                 this.updatePoints(isCorrect ? 1 : -1);
                 this.updateStreak(isCorrect);
-                playVoice(this.word.en);
-
-                // disable all
-                Array.from(optionsDiv.children).forEach(btn => (btn.disabled = true));
-
-                // use green dotted border for the correct answer if wrong
-                if (!isCorrect) {
+                playVoice(this.word.en);                Array.from(optionsDiv.children).forEach(btn => (btn.disabled = true));                if (!isCorrect) {
                     const correctBtn = Array.from(optionsDiv.children).find(btn => btn.textContent === correct);
                     if (correctBtn) {
                         correctBtn.style.border = "5px dotted green";
